@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Route, Switch } from 'react-router-dom';
+import { Route, Switch, Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { auth, createUserProfileDocument } from './firebase/firebase.utils';
 import { setCurrentUser } from './redux/user/userActions';
@@ -10,12 +10,6 @@ import HomePage from './containers/homepage/homepage';
 import ShopPage from './containers/shop/shop';
 
 import './App.css';
-
-const HatsPage = () => (
-  <div>
-    <h1>Hats Page</h1>
-  </div>
-);
 
 class App extends Component {
 
@@ -53,17 +47,27 @@ class App extends Component {
         <Header />
         <Switch>
           <Route exact path='/' component={HomePage} />
-          <Route path='/signin' component={SignInSignOut} />
+          <Route exact
+                 path='/signin'
+                 render={() => this.props.currentUser ? (
+                    <Redirect to='/'/>
+                     ) : (
+                       <SignInSignOut />
+                     )}
+          />
           <Route path='/shop' component={ShopPage} />
-          <Route path='/shop/hats' component={HatsPage} />
         </Switch>
       </div>
     );
   }
 }
 
+const mapStateToProps = ({ user }) => ({
+  currentUser: user.currentUser
+});
+
 const mapDispatchToProps = dispatch => ({
   setCurrentUser: user => dispatch(setCurrentUser(user))
 });
 
-export default connect(null, mapDispatchToProps)(App);
+export default connect(mapStateToProps, mapDispatchToProps)(App);
