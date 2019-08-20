@@ -3,13 +3,16 @@ import { Route, Switch, Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { auth, createUserProfileDocument } from './firebase/firebase.utils';
 import { setCurrentUser } from './redux/user/userActions';
+import { createStructuredSelector } from 'reselect';
 
 import Header from './components/header/header';
 import SignInSignOut from './containers/signIn-signOut/signIn-signOut';
 import HomePage from './containers/homepage/homepage';
 import ShopPage from './containers/shop/shop';
+import CheckoutPage from './containers/checkout/checkout';
 
 import './App.css';
+import {selectCurrentUser} from "./redux/user/userSelector";
 
 class App extends Component {
 
@@ -47,6 +50,8 @@ class App extends Component {
         <Header />
         <Switch>
           <Route exact path='/' component={HomePage} />
+          <Route path='/shop' component={ShopPage} />
+          <Route path='/checkout' component={CheckoutPage} />
           <Route exact
                  path='/signin'
                  render={() => this.props.currentUser ? (
@@ -55,15 +60,14 @@ class App extends Component {
                        <SignInSignOut />
                      )}
           />
-          <Route path='/shop' component={ShopPage} />
         </Switch>
       </div>
     );
   }
 }
 
-const mapStateToProps = ({ user }) => ({
-  currentUser: user.currentUser
+const mapStateToProps = createStructuredSelector ({
+  currentUser: selectCurrentUser
 });
 
 const mapDispatchToProps = dispatch => ({
