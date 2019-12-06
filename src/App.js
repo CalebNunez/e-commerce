@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Route, Switch, Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { auth, createUserProfileDocument } from './firebase/firebase.utils';
+import { auth, createUserProfileDocument, addCollectionAndDocuments } from './firebase/firebase.utils';
 import { setCurrentUser } from './redux/user/userActions';
 import { createStructuredSelector } from 'reselect';
 
@@ -30,13 +30,9 @@ class App extends Component {
             ...snapShot.data(),
           });
         });
-
       }
 
-      else {
-        setCurrentUser(userAuth);
-      }
-
+      setCurrentUser(userAuth);
     });
   }
 
